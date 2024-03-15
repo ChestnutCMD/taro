@@ -22,6 +22,7 @@ jobs:
       DB_HOST: ${{ secrets.DB_HOST }}
       BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
       PAYMENT_TOKEN: ${{ secrets.PAYMENT_TOKEN }}
+      $DOCKER_USERNAME: ${{ secrets.$DOCKER_USERNAME }}
     steps:
       - name: clone code
         uses: actions/checkout@v2
