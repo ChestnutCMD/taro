@@ -1,10 +1,11 @@
 from aiogram import Bot
 from aiogram.types import Message, FSInputFile
 
-from database.models import User
+from database.models import User, Cart
 from database.requests import add_user, get_user, get_carts, debiting_token
 from keyboards.reply import reply_keyboard
 from keyboards.inline import inline_markup
+from utils.gpt import request_gpt
 from utils.utils import choice_cart, choice_tree_carts, image_join
 
 
@@ -48,10 +49,11 @@ async def prediction(message: Message, bot: Bot):
         image = image_join(photo_1, photo_2, photo_3, name=str(chat_id))
         await bot.send_photo(chat_id=message.chat.id, photo=FSInputFile(image))
 
-        cart_1 = await get_carts(carts[0])
-        cart_2 = await get_carts(carts[1])
-        cart_3 = await get_carts(carts[2])
-        await message.answer(f'{cart_1.name}, {cart_2.name}, {cart_3.name}')
+        cart_1: Cart = await get_carts(carts[0])
+        cart_2: Cart = await get_carts(carts[1])
+        cart_3: Cart = await get_carts(carts[2])
+        predict = request_gpt(message.text, cart_1.name, cart_2.name, cart_3.name)
+        await message.answer(f'<b>{cart_1.name}, {cart_2.name}, {cart_3.name}.</b>\n {predict}')
         await debiting_token(chat_id)
     else:
         await message.answer('Недостаточный баланс', reply_markup=inline_markup)
