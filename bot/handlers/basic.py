@@ -52,8 +52,8 @@ async def prediction(message: Message, bot: Bot):
         cart_1: Cart = await get_carts(carts[0])
         cart_2: Cart = await get_carts(carts[1])
         cart_3: Cart = await get_carts(carts[2])
-        predict = request_gpt(message.text, cart_1.name, cart_2.name, cart_3.name)
-        await message.answer(f'<b>{cart_1.name}, {cart_2.name}, {cart_3.name}.</b>\n {predict}')
+        #predict = request_gpt(message.text, cart_1.name, cart_2.name, cart_3.name)
+        await message.answer(f'<b>{cart_1.name}, {cart_2.name}, {cart_3.name}.</b>')
         await debiting_token(chat_id)
     else:
         await message.answer('Недостаточный баланс', reply_markup=inline_markup)
