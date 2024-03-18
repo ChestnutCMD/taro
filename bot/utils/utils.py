@@ -3,12 +3,12 @@ from PIL import Image
 
 
 def choice_cart():
-    carts = [cart for cart in range(1, 23)]
+    carts = [cart for cart in range(1, 79)]
     return random.choice(carts)
 
 
 def choice_tree_carts():
-    carts = [cart for cart in range(1, 23)]
+    carts = [cart for cart in range(1, 79)]
     random.shuffle(carts)
     choices_carts = [carts[0], carts[1], carts[2]]
     return choices_carts
