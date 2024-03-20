@@ -1,3 +1,4 @@
+import asyncio
 import os
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command
@@ -57,5 +58,5 @@ def main():
 
 
 if __name__ == '__main__':
-    async_main()
+    asyncio.run(async_main())
     main()
