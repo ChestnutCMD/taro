@@ -1,10 +1,10 @@
 from aiogram import Bot
-from aiogram.types import Message, FSInputFile
+from aiogram.types import Message, FSInputFile, CallbackQuery
 
 from database.models import User, Cart
 from database.requests import add_user, get_user, get_carts, debiting_token
 from keyboards.reply import reply_keyboard
-from keyboards.inline import inline_markup
+from keyboards.inline import inline_markup, inline_markup_payment
 from utils.gpt import request_gpt
 from utils.utils import choice_cart, choice_tree_carts, image_join
 
@@ -26,6 +26,15 @@ async def get_balance(message: Message):
     user: User = await get_user(user_id)
     await message.answer(f'Ваш баланс: {user.token} token', reply_markup=inline_markup)
     await message.delete()
+
+
+async def buy_token(message: Message | CallbackQuery):
+    """ Покупка токенов """
+    if isinstance(message, Message):
+        await message.answer('Выберите колличество', reply_markup=inline_markup_payment)
+    elif isinstance(message, CallbackQuery):
+        call = message
+        await call.message.answer('Выберите колличество', reply_markup=inline_markup_payment)
 
 
 async def random_cart(message: Message, bot: Bot):

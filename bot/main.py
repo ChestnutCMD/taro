@@ -7,7 +7,7 @@ import asyncio
 import logging
 
 from database.models import async_main
-from handlers.basic import get_balance, register_user, random_cart, prediction
+from handlers.basic import get_balance, register_user, random_cart, prediction, buy_token
 from handlers.payment import order, pre_checkout, successful_payment
 from utils.commands import set_commands
 
@@ -35,9 +35,10 @@ async def start():
     dp.message.register(random_cart, F.text == 'Карта дня')
     dp.message.register(get_balance, Command(commands='balance'))
     dp.message.register(get_balance, F.text == 'Проверить баланс')
-    dp.message.register(order, Command(commands='buy_tokens'))
-    dp.message.register(order, F.text == 'Пополнить баланс')
-    dp.callback_query.register(order, F.data == 'buy_tokens')
+    dp.message.register(buy_token, Command(commands='buy_tokens'))
+    dp.message.register(buy_token, F.text == 'Пополнить баланс')
+    dp.callback_query.register(buy_token, F.data == 'buy_tokens')
+    dp.callback_query.register(order)
     dp.pre_checkout_query.register(pre_checkout)
     dp.message.register(successful_payment, F.content_type == ContentType.SUCCESSFUL_PAYMENT)
     dp.shutdown.register(stop_bot)
