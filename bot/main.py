@@ -1,44 +1,32 @@
 import os
 
 from aiogram import Bot, Dispatcher, F
+from aiogram.enums import ParseMode
 from aiogram.filters import Command
 from aiogram.types import ContentType, Update
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 from aiohttp import web
 import asyncio
 import logging
 
 from database.models import async_main
-from handlers.basic import get_balance, register_user, random_cart, prediction, buy_token, start_bot
+from handlers.basic import get_balance, register_user, random_cart, prediction, buy_token
 from handlers.payment import order, pre_checkout, successful_payment
-
+from utils.commands import set_commands
 
 # webhook settings
-WEBHOOK_HOST = f'https://tarobot.space'
 WEBHOOK_PATH = f'/webhook/{os.getenv("BOT_TOKEN")}'
-WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}'
-
-# webserver settings
-WEBAPP_HOST = '0.0.0.0'
-WEBAPP_PORT = '7500'
+WEBHOOK_URL = f'https://tarobot.space{WEBHOOK_PATH}'
+WEBHOOK_SECRET = 'secret'
 
 
-async def webhook_handler(request):
-    if request.match_info.get("token") == os.getenv("BOT_TOKEN"):
-        data = await request.json()
-        update = Update(**data)
-        await dp.update(update)
-        return web.Response(text="ok")
-    return web.Response(text="invalid token", status=403)
+async def start_bot(bot: Bot):
+    await set_commands(bot)
+    await bot.set_webhook(WEBHOOK_URL, secret_token=WEBHOOK_SECRET)
+    await bot.send_message(436774216, 'Бот запущен')
 
 
-app = web.Application()
-app.add_routes([web.post(WEBHOOK_PATH, webhook_handler)])
-bot = Bot(os.getenv('BOT_TOKEN'))
-dp = Dispatcher()
-
-
-async def stop_bot():
-    await bot.send_message(436774216, 'Бот остановлен')
+async def stop_bot(bot: Bot):
     await bot.delete_webhook()
 
 
@@ -46,8 +34,8 @@ async def start():
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - [%(levelname)s] - %(name)s - '
                         '(%(filename)s).%(funcName)s(%(lineno)d) - %(message)s')
+    dp = Dispatcher()
     await async_main()
-    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
     dp.startup.register(start_bot)
     dp.message.register(register_user, Command(commands='start'))
     dp.message.register(register_user, F.text == 'Старт')
@@ -61,8 +49,14 @@ async def start():
     dp.callback_query.register(order)
     dp.pre_checkout_query.register(pre_checkout)
     dp.message.register(successful_payment, F.content_type == ContentType.SUCCESSFUL_PAYMENT)
-    dp.shutdown.register(stop_bot)
     dp.message.register(prediction)
+    dp.shutdown.register(stop_bot)
+    bot = Bot(os.getenv('BOT_TOKEN'), parse_mode=ParseMode.HTML)
+    app = web.Application()
+    webhook_requests_handler = SimpleRequestHandler(dispatcher=dp, bot=bot, secret_token=WEBHOOK_SECRET)
+    webhook_requests_handler.register(app, path=WEBHOOK_PATH)
+    setup_application(app, dp, bot=bot)
+    web.run_app(app, host='0.0.0.0', port=7500)
 
 
 if __name__ == '__main__':
@@ -70,4 +64,3 @@ if __name__ == '__main__':
         asyncio.run(start())
     except KeyboardInterrupt as e:
         print(e)
-    web.run_app(app, host="0.0.0.0", port=7500)
