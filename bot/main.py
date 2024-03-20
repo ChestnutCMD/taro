@@ -1,12 +1,9 @@
 import os
-
 from aiogram import Bot, Dispatcher, F
-from aiogram.enums import ParseMode
 from aiogram.filters import Command
-from aiogram.types import ContentType, Update
+from aiogram.types import ContentType
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 from aiohttp import web
-import asyncio
 import logging
 
 from database.models import async_main
@@ -30,12 +27,12 @@ async def stop_bot(bot: Bot):
     await bot.delete_webhook()
 
 
-async def start():
+def main():
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - [%(levelname)s] - %(name)s - '
                         '(%(filename)s).%(funcName)s(%(lineno)d) - %(message)s')
     dp = Dispatcher()
-    await async_main()
+
     dp.startup.register(start_bot)
     dp.message.register(register_user, Command(commands='start'))
     dp.message.register(register_user, F.text == 'Старт')
@@ -51,7 +48,7 @@ async def start():
     dp.message.register(successful_payment, F.content_type == ContentType.SUCCESSFUL_PAYMENT)
     dp.message.register(prediction)
     dp.shutdown.register(stop_bot)
-    bot = Bot(os.getenv('BOT_TOKEN'), parse_mode=ParseMode.HTML)
+    bot = Bot(os.getenv('BOT_TOKEN'))
     app = web.Application()
     webhook_requests_handler = SimpleRequestHandler(dispatcher=dp, bot=bot, secret_token=WEBHOOK_SECRET)
     webhook_requests_handler.register(app, path=WEBHOOK_PATH)
@@ -60,7 +57,5 @@ async def start():
 
 
 if __name__ == '__main__':
-    try:
-        asyncio.run(start())
-    except KeyboardInterrupt as e:
-        print(e)
+    async_main()
+    main()
