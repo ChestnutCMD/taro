@@ -1,3 +1,4 @@
+import asyncio
 import random
 from PIL import Image
 import httpx
@@ -48,9 +49,9 @@ async def get_response(link: str):
             return await result.aread()
 
 
-async def get_text_horoscope(zodiac: str):
-    link = f'https://horo.mail.ru/prediction/{zodiac}/today/'
+async def get_text_horoscope(zodiac: str, period: str = 'today'):
+    link = f'https://horo.mail.ru/prediction/{zodiac}/{period}/'
     response_result = await get_response(link=link)
     beautifulsoup: BeautifulSoup = BeautifulSoup(markup=response_result, features='lxml')
-    text = beautifulsoup.find(name='div', class_='article__text')
+    text = beautifulsoup.find(name='div', class_='article__item article__item_alignment_left article__item_html')
     return text.text

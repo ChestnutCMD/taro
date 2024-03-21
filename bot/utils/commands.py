@@ -17,10 +17,6 @@ async def set_commands(bot: Bot):
             description='Проверить баланс'
         ),
         BotCommand(
-            command='horoscope',
-            description='Гороскоп'
-        ),
-        BotCommand(
             command='buy_tokens',
             description='Покупка токенов'
         )
