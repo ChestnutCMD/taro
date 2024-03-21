@@ -50,5 +50,5 @@ async def successful_payment(message: Message):
     currency = message.successful_payment.currency
     price = message.successful_payment.total_amount/100
     await add_token(chat_id, int(price/10))
-    await message.answer(f'Ваш баланс пополнен на {price/10 } токенов')
+    await message.answer(f'Ваш баланс пополнен на {price/10} токенов')
     await add_transaction(user_id=user_id, currency=currency, price=price)
