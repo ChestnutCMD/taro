@@ -1,5 +1,7 @@
 import random
 from PIL import Image
+import httpx
+from bs4 import BeautifulSoup
 
 
 def choice_cart():
@@ -28,3 +30,27 @@ def image_join(image1: str, image2: str, image3: str, name: str):
     return f'Images/Prediction/{name}.jpg'
 
 # converted_img = img.transpose(Images.FLIP_TOP_BOTTOM)  # перевернуть изображение # rotated_img = img.rotate(180)
+
+
+headers = {
+    'accept-language': 'en-us,en;q=0.5',
+    'user-agent': 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5 (.NET CLR 3.5.30729)',
+    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+}
+
+
+async def get_response(link: str):
+    async with httpx.AsyncClient(headers=headers, follow_redirects=True) as htx:
+        result: httpx.Response = await htx.get(url=link)
+        if result.status_code != 200:
+            return await get_response(link=link)
+        else:
+            return await result.aread()
+
+
+async def get_text_horoscope(zodiac: str):
+    link = f'https://horo.mail.ru/prediction/{zodiac}/today/'
+    response_result = await get_response(link=link)
+    beautifulsoup: BeautifulSoup = BeautifulSoup(markup=response_result, features='lxml')
+    text = beautifulsoup.find(name='div', class_='article__text')
+    return text.text

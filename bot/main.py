@@ -9,6 +9,7 @@ import logging
 
 from database.models import async_main
 from handlers.basic import get_balance, register_user, random_cart, prediction, buy_token
+from handlers.horoscope import get_zodiac, get_horoscope
 from handlers.payment import order, pre_checkout, successful_payment
 from utils.commands import set_commands
 
@@ -37,6 +38,9 @@ def main():
     dp.startup.register(start_bot)
     dp.message.register(register_user, Command(commands='start'))
     dp.message.register(register_user, F.text == 'Старт')
+    dp.message.register(get_zodiac, Command(commands='horoscope'))
+    dp.message.register(get_zodiac, F.text == 'Гороскоп')
+    dp.callback_query.register(get_horoscope)
     dp.message.register(random_cart, Command(commands='cart_of_day'))
     dp.message.register(random_cart, F.text == 'Карта дня')
     dp.message.register(get_balance, Command(commands='balance'))
