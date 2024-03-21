@@ -9,7 +9,6 @@ import logging
 
 from database.models import async_main
 from handlers.basic import get_balance, register_user, random_cart, prediction, buy_token
-from handlers.horoscope import get_zodiac, get_horoscope
 from handlers.payment import order, pre_checkout, successful_payment
 from utils.commands import set_commands
 

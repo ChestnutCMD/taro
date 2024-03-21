@@ -1,8 +1,6 @@
-import asyncio
 import random
 from PIL import Image
-import httpx
-from bs4 import BeautifulSoup
+
 
 
 def choice_cart():
