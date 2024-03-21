@@ -29,10 +29,10 @@ async def debiting_token(telegram_id: int):
         await session.commit()
 
 
-async def add_token(telegram_id: int):
+async def add_token(telegram_id: int, count_token: int):
     """ Покупка токенов """
     async with async_session() as session:
-        stmt = update(User).where(User.telegram_id == telegram_id).values({User.token: User.token + 10})
+        stmt = update(User).where(User.telegram_id == telegram_id).values({User.token: User.token + count_token})
         await session.execute(stmt)
         await session.commit()
 

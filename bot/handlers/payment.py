@@ -45,10 +45,10 @@ async def pre_checkout(pre_checkout_query: PreCheckoutQuery, bot: Bot):
 
 async def successful_payment(message: Message):
     chat_id: int = message.chat.id
-    await add_token(chat_id)
     user = await get_user(chat_id)
     user_id = user.id
     currency = message.successful_payment.currency
-    price = message.successful_payment.total_amount
+    price = message.successful_payment.total_amount/100
+    await add_token(chat_id, int(price/10))
     await message.answer(f'Ваш баланс пополнен на {price/1000} токенов')
     await add_transaction(user_id=user_id, currency=currency, price=price)
