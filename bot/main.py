@@ -48,7 +48,7 @@ def main():
     dp.callback_query.register(buy_token, F.data == 'buy_tokens')
     dp.callback_query.register(check_handler, lambda c: 'check' in c.data)
     dp.callback_query.register(buy_handler)
-    dp.message.register(add_email, EmailFilter)
+    dp.message.register(add_email, F.text.regexp(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'))
     dp.message.register(prediction)
     dp.shutdown.register(stop_bot)
 
