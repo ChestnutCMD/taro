@@ -7,7 +7,8 @@ from aiohttp import web
 import logging
 
 from database.models import async_main
-from handlers.basic import get_balance, register_user, random_cart, prediction, buy_token
+from filters.filter import EmailFilter
+from handlers.basic import get_balance, register_user, random_cart, prediction, buy_token, add_email
 from handlers.yookassa_handlers import check_handler, buy_handler
 from utils.commands import set_commands
 
@@ -47,7 +48,7 @@ def main():
     dp.callback_query.register(buy_token, F.data == 'buy_tokens')
     dp.callback_query.register(check_handler, lambda c: 'check' in c.data)
     dp.callback_query.register(buy_handler)
-
+    dp.message.register(add_email, EmailFilter)
     dp.message.register(prediction)
     dp.shutdown.register(stop_bot)
 

@@ -23,6 +23,7 @@ class User(Base):
     telegram_id: Mapped[int] = mapped_column(BigInteger)
     name: Mapped[str] = mapped_column(String)
     token: Mapped[int] = mapped_column(default=3)
+    email: Mapped[str] = mapped_column(String, nullable=True)
 
 
 class Transaction(Base):

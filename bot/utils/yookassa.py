@@ -30,8 +30,7 @@ def create(amount, chat_id, user):
         "receipt": {
             "customer": {
                 "full_name": f"{user.first_name} {user.last_name}",
-                "email": "13can133@egmail.com",
-                "phone": "79297579477"
+                "email": user.email,
             },
             "items": [
                 {

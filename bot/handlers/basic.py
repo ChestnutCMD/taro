@@ -2,7 +2,7 @@ from aiogram import Bot
 from aiogram.types import Message, FSInputFile, CallbackQuery
 
 from database.models import User, Cart
-from database.requests import add_user, get_user, get_carts, debiting_token
+from database.requests import add_user, get_user, get_carts, debiting_token, get_user_email, add_user_email
 from keyboards.reply import reply_keyboard
 from keyboards.inline import inline_markup, inline_markup_payment
 from utils.gpt import request_gpt
@@ -20,6 +20,11 @@ async def register_user(message: Message):
     await message.delete()
 
 
+async def add_email(message: Message):
+    await add_user_email(message.from_user.id, message.text)
+    await message.answer('Ваша почта добавлена. Теперь можете перейти к оплате')
+
+
 async def get_balance(message: Message):
     """ Проверить баланс """
     user_id: int = message.from_user.id
@@ -30,11 +35,15 @@ async def get_balance(message: Message):
 
 async def buy_token(message: Message | CallbackQuery):
     """ Покупка токенов """
-    if isinstance(message, Message):
-        await message.answer('Выберите колличество', reply_markup=inline_markup_payment)
-    elif isinstance(message, CallbackQuery):
-        call = message
-        await call.message.answer('Выберите колличество', reply_markup=inline_markup_payment)
+    email = await get_user_email(message.from_user.id)
+    if email is None:
+        await message.answer('Введите свой Email. Это необходимо для отправки чеков о покупке')
+    else:
+        if isinstance(message, Message):
+            await message.answer('Выберите колличество', reply_markup=inline_markup_payment)
+        elif isinstance(message, CallbackQuery):
+            call = message
+            await call.message.answer('Выберите колличество', reply_markup=inline_markup_payment)
 
 
 async def random_cart(message: Message, bot: Bot):
