@@ -8,7 +8,7 @@ Configuration.account_id = os.getenv('PAYMENT_SHOP_ID')
 Configuration.secret_key = os.getenv('PAYMENT_TOKEN')
 
 
-def create(amount, chat_id):
+def create(amount, chat_id, user):
     id_key = str(uuid.uuid4())
     payment = Payment.create({
         "amount": {
@@ -26,7 +26,24 @@ def create(amount, chat_id):
         'metadata': {
             'chat_id': chat_id
         },
-        'description': 'Описание товара....'
+        'description': 'Покупка токенов',
+        "receipt": {
+            "customer": {
+                "full_name": f"{user.first_name} {user.last_name}",
+                "email": "13can133@egmail.com",
+                "phone": "79297579477"
+            },
+            "items": [
+                {
+                    "description": f"Покупка {amount/10} токенов",
+                    "quantity": "1.00",
+                    "amount": {
+                        "value": amount,
+                        "currency": "RUB"
+                    },
+                },
+            ]
+        }
     }, id_key)
 
     return payment.confirmation.confirmation_url, payment.id
