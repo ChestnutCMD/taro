@@ -7,7 +7,6 @@ from aiohttp import web
 import logging
 
 from database.models import async_main
-from filters.filter import EmailFilter
 from handlers.basic import get_balance, register_user, random_cart, prediction, buy_token, add_email
 from handlers.yookassa_handlers import check_handler, buy_handler
 from utils.commands import set_commands
