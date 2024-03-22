@@ -35,7 +35,7 @@ def create(amount, chat_id, user):
             },
             "items": [
                 {
-                    "description": f"Покупка {amount/10} токенов",
+                    "description": f"Покупка {float(amount)/10} токенов",
                     "quantity": "1.00",
                     "amount": {
                         "value": amount,
