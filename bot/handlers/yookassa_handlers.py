@@ -14,8 +14,10 @@ async def buy_handler(call: CallbackQuery):
         price = '200.00'
     else:
         price = '500.00'
+
     user: User = await get_user(call.message.chat.id)
-    payment_url, payment_id = create(price, user)
+    payment_url, payment_id = create(price, call, user)
+
     builder = InlineKeyboardBuilder()
     builder.add(types.InlineKeyboardButton(
         text='Оплатить',

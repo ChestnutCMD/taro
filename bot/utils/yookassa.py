@@ -1,14 +1,17 @@
 import os
 
 import yookassa
+from aiogram.types import CallbackQuery
 from yookassa import Configuration, Payment
 import uuid
+
+from database.models import User
 
 Configuration.account_id = os.getenv('PAYMENT_SHOP_ID')
 Configuration.secret_key = os.getenv('PAYMENT_TOKEN')
 
 
-def create(amount, user):
+def create(amount: str, call: CallbackQuery, user: User):
     id_key = str(uuid.uuid4())
     payment = Payment.create({
         "amount": {
@@ -24,13 +27,14 @@ def create(amount, user):
         },
         'capture': True,
         'metadata': {
-            'chat_id': user.telegram_id
+            'chat_id': call.chat_id
         },
         'description': 'Покупка токенов',
         "receipt": {
             "customer": {
-                "full_name": f"{user.first_name} {user.last_name}",
+                "full_name": f"{call.from_user.first_user} {call.from_user.last_name}",
                 "email": user.email,
+                "phone": "79297579477"
             },
             "items": [
                 {
