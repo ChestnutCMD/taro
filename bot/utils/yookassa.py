@@ -32,7 +32,7 @@ def create(amount: str, call: CallbackQuery, user: User):
         'description': 'Покупка токенов',
         "receipt": {
             "customer": {
-                "full_name": f"{call.from_user.first_user} {call.from_user.last_name}",
+                "full_name": user.name,
                 "email": user.email,
                 "phone": "79297579477"
             },
