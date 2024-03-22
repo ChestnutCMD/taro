@@ -27,7 +27,7 @@ def create(amount: str, call: CallbackQuery, user: User):
         },
         'capture': True,
         'metadata': {
-            'chat_id': call.chat_id
+            'chat_id': call.message.chat.id
         },
         'description': 'Покупка токенов',
         "receipt": {
