@@ -34,7 +34,6 @@ def create(amount: str, call: CallbackQuery, user: User):
             "customer": {
                 "full_name": user.name,
                 "email": user.email,
-                "phone": "79297579477"
             },
             "items": [
                 {
