@@ -41,6 +41,14 @@ def create(amount, chat_id, user):
                         "value": amount,
                         "currency": "RUB"
                     },
+                    "vat_code": "2",
+                    "payment_mode": "full_payment",
+                    "payment_subject": "payment",
+                    "supplier": {
+                        "name": "Леонтьева Ильвина",
+                        "phone": "+7 929 753-58-15",
+                        "inn": "023400437033"
+                    }
                 },
             ]
         }
