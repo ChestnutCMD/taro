@@ -22,7 +22,7 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     telegram_id: Mapped[int] = mapped_column(BigInteger)
     name: Mapped[str] = mapped_column(String)
-    token: Mapped[int] = mapped_column(default=1)
+    token: Mapped[int] = mapped_column(default=3)
 
 
 class Transaction(Base):

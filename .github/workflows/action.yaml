@@ -22,6 +22,7 @@ jobs:
       DB_HOST: ${{ secrets.DB_HOST }}
       BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
       PAYMENT_TOKEN: ${{ secrets.PAYMENT_TOKEN }}
+      PAYMENT_SHOP_ID: ${{ secrets.PAYMENT_SHOP_ID }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
