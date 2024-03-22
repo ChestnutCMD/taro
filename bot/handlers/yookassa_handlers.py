@@ -2,6 +2,7 @@ from aiogram import types
 from aiogram.types import CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from database.models import User
 from database.requests import add_token, add_transaction, get_user
 from utils.yookassa import create, check
 
@@ -13,8 +14,8 @@ async def buy_handler(call: CallbackQuery):
         price = '200.00'
     else:
         price = '500.00'
-
-    payment_url, payment_id = create(price, call.message.chat.id, call.message.from_user)
+    user: User = await get_user(call.message.chat.id)
+    payment_url, payment_id = create(price, user)
     builder = InlineKeyboardBuilder()
     builder.add(types.InlineKeyboardButton(
         text='Оплатить',
