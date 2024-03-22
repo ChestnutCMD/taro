@@ -20,7 +20,7 @@ def create(amount, chat_id):
         },
         'confirmation': {
             'type': 'redirect',
-            'return_url': 'https://t.me/tod_god_bot'
+            'return_url': 'https://t.me/Taro_tarobot'
         },
         'capture': True,
         'metadata': {
