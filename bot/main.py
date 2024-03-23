@@ -22,7 +22,7 @@ bot = Bot(os.getenv('BOT_TOKEN'))
 
 
 async def handle_post_request(request):
-    data = await request.post()
+    data = await request.json()
 
     price = data['object']['amount']['value']
     currency = data['object']['amount']['currency']
