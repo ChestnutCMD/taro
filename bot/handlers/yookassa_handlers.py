@@ -44,3 +44,11 @@ async def check_handler(callback: types.CallbackQuery):
     else:
         await callback.message.answer('Оплата еще не прошла или возникла ошибка')
     await callback.answer()
+
+
+async def check_payment(telegram_id, price, currency):
+    user = await get_user(telegram_id)
+    await add_token(user.telegram_id, int(price / 10))
+    await add_transaction(user_id=user.id, currency=currency, price=price)
+
+
