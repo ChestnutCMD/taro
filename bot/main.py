@@ -26,8 +26,8 @@ async def handle_post_request(request):
 
     price = data['object']['amount']['value']
     currency = data['object']['amount']['currency']
-    telegram_id = data['object']['metadata']['chat_id']
-    print(price, currency, telegram_id, data['object']['status'])
+    telegram_id = int(data['object']['metadata']['chat_id'])
+
     if data['object']['status'] == 'succeeded':
         await check_payment(telegram_id, price, currency)
         await bot.send_message(chat_id=telegram_id, text=f'Ваш баланс пополнен на {price / 10} токенов')
