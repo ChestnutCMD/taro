@@ -24,13 +24,13 @@ bot = Bot(os.getenv('BOT_TOKEN'))
 async def handle_post_request(request):
     data = await request.json()
 
-    price = data['object']['amount']['value']
+    price = float(data['object']['amount']['value'])
     currency = data['object']['amount']['currency']
     telegram_id = int(data['object']['metadata']['chat_id'])
 
     if data['object']['status'] == 'succeeded':
         await check_payment(telegram_id, price, currency)
-        await bot.send_message(chat_id=telegram_id, text=f'Ваш баланс пополнен на {price / 10} токенов')
+        await bot.send_message(chat_id=telegram_id, text=f'Ваш баланс пополнен на {int(price / 10)} токенов')
     else:
         await bot.send_message(chat_id=telegram_id, text=f'Что-то пошло не так')
     return aiohttp.web.Response(text="ok", status=200)
