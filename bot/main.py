@@ -37,6 +37,8 @@ def main():
 
     dp.message.register(register_user, Command(commands='start'))
     dp.message.register(register_user, F.text == 'Старт')
+    dp.message.register(register_user, Command(commands='help'))
+    dp.message.register(register_user, F.text == 'Помощь')
     dp.message.register(random_cart, Command(commands='cart_of_day'))
     dp.message.register(random_cart, F.text == 'Карта дня')
     dp.message.register(get_balance, Command(commands='balance'))
