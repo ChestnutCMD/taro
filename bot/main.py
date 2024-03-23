@@ -7,7 +7,7 @@ from aiohttp import web
 import logging
 
 from database.models import async_main
-from handlers.basic import get_balance, register_user, random_cart, prediction, buy_token, add_email
+from handlers.basic import get_balance, register_user, random_cart, prediction, buy_token, add_email, bot_help
 from handlers.yookassa_handlers import check_handler, buy_handler
 from utils.commands import set_commands
 
@@ -37,8 +37,8 @@ def main():
 
     dp.message.register(register_user, Command(commands='start'))
     dp.message.register(register_user, F.text == 'Старт')
-    dp.message.register(register_user, Command(commands='help'))
-    dp.message.register(register_user, F.text == 'Помощь')
+    dp.message.register(bot_help, Command(commands='help'))
+    dp.message.register(bot_help, F.text == 'Помощь')
     dp.message.register(random_cart, Command(commands='cart_of_day'))
     dp.message.register(random_cart, F.text == 'Карта дня')
     dp.message.register(get_balance, Command(commands='balance'))
