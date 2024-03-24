@@ -1,7 +1,5 @@
 import os
-
-import yookassa
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, Message
 from yookassa import Configuration, Payment
 import uuid
 
@@ -11,7 +9,11 @@ Configuration.account_id = os.getenv('PAYMENT_SHOP_ID')
 Configuration.secret_key = os.getenv('PAYMENT_TOKEN')
 
 
-def create(amount: str, call: CallbackQuery, user: User):
+def create(amount: str, message: Message | CallbackQuery, user: User):
+    if isinstance(message, Message):
+        chat_id = message.chat.id
+    else:
+        chat_id = message.message.chat.id
     id_key = str(uuid.uuid4())
     payment = Payment.create({
         "amount": {
@@ -27,7 +29,7 @@ def create(amount: str, call: CallbackQuery, user: User):
         },
         'capture': True,
         'metadata': {
-            'chat_id': call.message.chat.id
+            'chat_id': chat_id
         },
         'description': 'Покупка токенов',
         "receipt": {
@@ -56,12 +58,4 @@ def create(amount: str, call: CallbackQuery, user: User):
         }
     }, id_key)
 
-    return payment.confirmation.confirmation_url, payment.id
-
-
-def check(payment_id):
-    payment = yookassa.Payment.find_one(payment_id)
-    if payment.status == 'succeeded':
-        return payment
-    else:
-        return False
+    return payment.confirmation.confirmation_url

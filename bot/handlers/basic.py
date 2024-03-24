@@ -1,12 +1,14 @@
 from aiogram import Bot
-from aiogram.types import Message, FSInputFile, CallbackQuery
+from aiogram.types import Message, FSInputFile, CallbackQuery, InlineKeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from database.models import User, Cart
 from database.requests import add_user, get_user, get_carts, debiting_token, get_user_email, add_user_email
 from keyboards.reply import reply_keyboard
-from keyboards.inline import inline_markup, inline_markup_payment
+from keyboards.inline import inline_markup
 from utils.gpt import request_gpt
 from utils.utils import choice_cart, choice_tree_carts, image_join
+from utils.yookassa import create
 
 
 async def register_user(message: Message):
@@ -40,10 +42,47 @@ async def buy_token(message: Message | CallbackQuery):
         await message.answer('Введите свой Email. Это необходимо для отправки чеков о покупке')
     else:
         if isinstance(message, Message):
-            await message.answer('Выберите колличество', reply_markup=inline_markup_payment)
+            user: User = await get_user(message.chat.id)
+            url_100 = create(amount='100.00', message=message, user=user)
+            url_200 = create(amount='200.00', message=message, user=user)
+            url_500 = create(amount='500.00', message=message, user=user)
+
+            builder = InlineKeyboardBuilder()
+            builder.add(InlineKeyboardButton(
+                text='10 токенов',
+                url=url_100
+            ))
+            builder.add(InlineKeyboardButton(
+                text='20 токенов',
+                url=url_200
+            ))
+            builder.add(InlineKeyboardButton(
+                text='10 токенов',
+                url=url_500
+            ))
+            await message.answer('Выберите колличество', reply_markup=builder.as_markup())
+
         elif isinstance(message, CallbackQuery):
             call = message
-            await call.message.answer('Выберите колличество', reply_markup=inline_markup_payment)
+            user: User = await get_user(call.message.chat.id)
+            url_100 = create(amount='100.00', message=call, user=user)
+            url_200 = create(amount='200.00', message=call, user=user)
+            url_500 = create(amount='500.00', message=call, user=user)
+
+            builder = InlineKeyboardBuilder()
+            builder.add(InlineKeyboardButton(
+                text='10 токенов',
+                url=url_100
+            ))
+            builder.add(InlineKeyboardButton(
+                text='20 токенов',
+                url=url_200
+            ))
+            builder.add(InlineKeyboardButton(
+                text='10 токенов',
+                url=url_500
+            ))
+            await call.message.answer('Выберите колличество', reply_markup=builder.as_markup())
 
 
 async def random_cart(message: Message, bot: Bot):

@@ -4,7 +4,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from database.models import User
 from database.requests import add_token, add_transaction, get_user
-from utils.yookassa import create, check
+from utils.yookassa import create
 
 
 async def buy_handler(call: CallbackQuery):
@@ -23,27 +23,8 @@ async def buy_handler(call: CallbackQuery):
         text='Оплатить',
         url=payment_url
     ))
-    builder.add(types.InlineKeyboardButton(
-        text='Проверить оплату',
-        callback_data=f'check_{payment_id}'
-    ))
 
     await call.message.answer(f"Счет на оплату {int(float(price)/10)} токенов сформирован!", reply_markup=builder.as_markup())
-
-
-async def check_handler(callback: types.CallbackQuery):
-    result = check(callback.data.split('_')[-1])
-    if result:
-        price = result.amount.value
-        currency = result.amount.currency
-        chat_id = int(result.metadata['chat_id'])
-        user = await get_user(chat_id)
-        await add_token(user.telegram_id, int(price / 10))
-        await add_transaction(user_id=user.id, currency=currency, price=price)
-        await callback.message.answer(f'Ваш баланс пополнен на {price/10} токенов')
-    else:
-        await callback.message.answer('Оплата еще не прошла или возникла ошибка')
-    await callback.answer()
 
 
 async def check_payment(telegram_id, price, currency):
