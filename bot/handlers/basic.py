@@ -42,48 +42,62 @@ async def buy_token(message: Message | CallbackQuery):
     if email is None:
         await message.answer('Введите свой Email. Это необходимо для отправки чеков о покупке')
     else:
-        if isinstance(message, Message):
-            user: User = await get_user(message.chat.id)
-            url_100 = create(amount='100.00', message=message, user=user)
-            url_200 = create(amount='200.00', message=message, user=user)
-            url_500 = create(amount='500.00', message=message, user=user)
+        # if isinstance(message, Message):
+        #     user: User = await get_user(message.chat.id)
+        #     url_100 = create(amount='100.00', message=message, user=user)
+        #     url_200 = create(amount='200.00', message=message, user=user)
+        #     url_500 = create(amount='500.00', message=message, user=user)
+        #
+        #     builder = InlineKeyboardBuilder()
+        #     builder.add(InlineKeyboardButton(
+        #         text='10 токенов',
+        #         url=url_100
+        #     ))
+        #     builder.add(InlineKeyboardButton(
+        #         text='20 токенов',
+        #         url=url_200
+        #     ))
+        #     builder.add(InlineKeyboardButton(
+        #         text='50 токенов',
+        #         url=url_500
+        #     ))
+        #     await message.answer('Выберите колличество', reply_markup=builder.as_markup())
+        #
+        # elif isinstance(message, CallbackQuery):
+        #     call = message
+        #     user: User = await get_user(call.message.chat.id)
+        #     url_100 = create(amount='100.00', message=call, user=user)
+        #     url_200 = create(amount='200.00', message=call, user=user)
+        #     url_500 = create(amount='500.00', message=call, user=user)
+        #
+        #     builder = InlineKeyboardBuilder()
+        #     builder.add(InlineKeyboardButton(
+        #         text='10 токенов',
+        #         url=url_100
+        #     ))
+        #     builder.add(InlineKeyboardButton(
+        #         text='20 токенов',
+        #         url=url_200
+        #     ))
+        #     builder.add(InlineKeyboardButton(
+        #         text='50 токенов',
+        #         url=url_500
+        #     ))
+        #     await call.message.answer('Выберите колличество', reply_markup=builder.as_markup())
 
-            builder = InlineKeyboardBuilder()
-            builder.add(InlineKeyboardButton(
-                text='10 токенов',
-                url=url_100
-            ))
-            builder.add(InlineKeyboardButton(
-                text='20 токенов',
-                url=url_200
-            ))
-            builder.add(InlineKeyboardButton(
-                text='50 токенов',
-                url=url_500
-            ))
-            await message.answer('Выберите колличество', reply_markup=builder.as_markup())
+        user: User = await get_user(message.chat.id if isinstance(message, Message) else message.message.chat.id)
+        url_100 = create(amount='100.00', message=message, user=user)
+        url_200 = create(amount='200.00', message=message, user=user)
+        url_500 = create(amount='500.00', message=message, user=user)
 
-        elif isinstance(message, CallbackQuery):
-            call = message
-            user: User = await get_user(call.message.chat.id)
-            url_100 = create(amount='100.00', message=call, user=user)
-            url_200 = create(amount='200.00', message=call, user=user)
-            url_500 = create(amount='500.00', message=call, user=user)
+        builder = InlineKeyboardBuilder()
+        builder.add(InlineKeyboardButton(text='10 токенов', url=url_100))
+        builder.add(InlineKeyboardButton(text='20 токенов', url=url_200))
+        builder.add(InlineKeyboardButton(text='50 токенов', url=url_500))
 
-            builder = InlineKeyboardBuilder()
-            builder.add(InlineKeyboardButton(
-                text='10 токенов',
-                url=url_100
-            ))
-            builder.add(InlineKeyboardButton(
-                text='20 токенов',
-                url=url_200
-            ))
-            builder.add(InlineKeyboardButton(
-                text='50 токенов',
-                url=url_500
-            ))
-            await call.message.answer('Выберите колличество', reply_markup=builder.as_markup())
+        await message.answer('Выберите количество', reply_markup=builder.as_markup()) \
+            if isinstance(message, Message) \
+            else await message.message.answer('Выберите количество', reply_markup=builder.as_markup())
 
 
 async def random_cart(message: Message, bot: Bot):
@@ -127,7 +141,7 @@ async def bot_help(message: Message):
                          '/buy_tokens - Покупка токенов. Для покупки необходимо добавить свой email адрес '
                          '(это необходимо для отправки чека о покупке). '
                          'Для этого просто напишите в чат свой email адрес. '
-                         'Выберите колличество токенов, которое хотите купить.\n'                         
+                         'Выберите колличество токенов, которое хотите купить.\n'
                          'Моя главная функция - это ответы на ваши впоросы на основе карт таро '
                          'Для этого напишите в чат вопрос, который вас интересует, '
                          'и я сделаю предсказание на основе выпавших карт таро. '
