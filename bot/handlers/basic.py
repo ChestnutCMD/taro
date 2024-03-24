@@ -58,7 +58,7 @@ async def buy_token(message: Message | CallbackQuery):
                 url=url_200
             ))
             builder.add(InlineKeyboardButton(
-                text='10 токенов',
+                text='50 токенов',
                 url=url_500
             ))
             await message.answer('Выберите колличество', reply_markup=builder.as_markup())
@@ -80,7 +80,7 @@ async def buy_token(message: Message | CallbackQuery):
                 url=url_200
             ))
             builder.add(InlineKeyboardButton(
-                text='10 токенов',
+                text='50 токенов',
                 url=url_500
             ))
             await call.message.answer('Выберите колличество', reply_markup=builder.as_markup())
