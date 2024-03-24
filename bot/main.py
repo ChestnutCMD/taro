@@ -1,6 +1,5 @@
 import asyncio
 import os
-
 import aiohttp
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command
@@ -10,8 +9,8 @@ import logging
 
 from database.models import async_main
 from handlers.basic import get_balance, register_user, random_cart, prediction, buy_token, add_email, bot_help
-from handlers.yookassa_handlers import buy_handler, check_payment
 from utils.commands import set_commands
+from utils.yookassa import check_payment
 
 # webhook settings
 WEBHOOK_PATH = f'/webhook/{os.getenv("BOT_TOKEN")}'
@@ -63,7 +62,6 @@ def main(bot: Bot):
     dp.message.register(buy_token, Command(commands='buy_tokens'))
     dp.message.register(buy_token, F.text == 'Пополнить баланс')
     dp.callback_query.register(buy_token, F.data == 'buy_tokens')
-    dp.callback_query.register(buy_handler)
     dp.message.register(add_email, F.text.regexp(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'))
     dp.message.register(prediction)
     dp.shutdown.register(stop_bot)

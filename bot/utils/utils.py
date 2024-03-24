@@ -2,7 +2,6 @@ import random
 from PIL import Image
 
 
-
 def choice_cart():
     carts = [cart for cart in range(1, 79)]
     return random.choice(carts)
