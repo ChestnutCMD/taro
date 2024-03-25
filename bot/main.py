@@ -10,6 +10,7 @@ import logging
 from database.models import async_main
 from handlers.basic import get_balance, register_user, random_cart, prediction, buy_token, add_email, bot_help
 from utils.commands import set_commands
+from utils.task_scheduler import daily_token_update
 from utils.yookassa import check_payment
 
 # webhook settings
@@ -76,3 +77,4 @@ def main(bot: Bot):
 if __name__ == '__main__':
     asyncio.run(async_main())
     main(bot)
+    daily_token_update()

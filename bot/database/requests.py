@@ -51,6 +51,14 @@ async def add_token(telegram_id: int, count_token: int):
         await session.commit()
 
 
+async def update_tokens():
+    """ Добавление 1 токена всем пользователям с балансом 0 """
+    async with async_session() as session:
+        stmt = update(User).where(User.token == 0).values({User.token: 1})
+        await session.execute(stmt)
+        await session.commit()
+
+
 async def get_carts(cart_id: int):
     """ Получение карты по ID """
     async with async_session() as session:
