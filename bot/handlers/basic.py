@@ -18,7 +18,7 @@ async def register_user(message: Message):
     user: User = await get_user(telegram_id)
     if user is None:
         await add_user(first_name, telegram_id)
-    await message.answer(text=f'Добро пожаловать, {first_name}!\n Можешь задать свой вопрос.', reply_markup=reply_keyboard)
+    await message.answer(text=f'Добро пожаловать, {first_name}!\n Можете задать свой вопрос.', reply_markup=reply_keyboard)
     await message.delete()
 
 
