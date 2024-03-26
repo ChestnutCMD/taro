@@ -71,10 +71,10 @@ def main(bot: Bot):
     webhook_requests_handler = SimpleRequestHandler(dispatcher=dp, bot=bot, secret_token=WEBHOOK_SECRET)
     webhook_requests_handler.register(app, path=WEBHOOK_PATH)
     setup_application(app, dp, bot=bot)
+    daily_token_update()
     web.run_app(app, host='0.0.0.0', port=7500)
 
 
 if __name__ == '__main__':
     asyncio.run(async_main())
     main(bot)
-    daily_token_update()
