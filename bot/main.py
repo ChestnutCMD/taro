@@ -1,6 +1,7 @@
 import asyncio
 import os
 import aiohttp
+import schedule
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
@@ -8,9 +9,10 @@ from aiohttp import web
 import logging
 
 from database.models import async_main
+from database.requests import update_tokens
 from handlers.basic import get_balance, register_user, random_cart, prediction, buy_token, add_email, bot_help
 from utils.commands import set_commands
-from utils.task_scheduler import daily_token_update
+from utils.task_scheduler import daily_token_update, run_continuously
 from utils.yookassa import check_payment
 
 # webhook settings
@@ -67,6 +69,7 @@ def main(bot: Bot):
     dp.message.register(prediction)
     dp.shutdown.register(stop_bot)
     app = web.Application()
+    schedule.every().day.at('21:00').do(asyncio.run, update_tokens())  #
     app.router.add_post('/payment', handle_post_request)  # роут для обработки платежей
     webhook_requests_handler = SimpleRequestHandler(dispatcher=dp, bot=bot, secret_token=WEBHOOK_SECRET)
     webhook_requests_handler.register(app, path=WEBHOOK_PATH)
@@ -75,6 +78,8 @@ def main(bot: Bot):
 
 
 if __name__ == '__main__':
+    stop_run_continuously = run_continuously()
     asyncio.run(async_main())
     main(bot)
-    daily_token_update()
+    stop_run_continuously.set()
+    

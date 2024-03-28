@@ -1,9 +1,15 @@
+import threading
 import schedule
-from database.requests import update_tokens
 
 
-def daily_token_update():
-    schedule.every().day.at('00:01').do(update_tokens)
-    while True:
-        schedule.run_pending()
+def run_continuously():
+    cease_continuous_run = threading.Event()
 
+    class ScheduleThread(threading.Thread):
+        @classmethod
+        def run(cls):
+            while not cease_continuous_run.is_set():
+                schedule.run_pending()
+    continuous_thread = ScheduleThread()
+    continuous_thread.start()
+    return cease_continuous_run
