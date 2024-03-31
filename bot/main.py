@@ -69,7 +69,7 @@ def main(bot: Bot):
     dp.message.register(prediction)
     dp.shutdown.register(stop_bot)
     app = web.Application()
-    schedule.every().day.at('21:00').do(asyncio.run, update_tokens())  #
+    schedule.every().day.at('21:00').do(asyncio.create_task, update_tokens())  #
     app.router.add_post('/payment', handle_post_request)  # роут для обработки платежей
     webhook_requests_handler = SimpleRequestHandler(dispatcher=dp, bot=bot, secret_token=WEBHOOK_SECRET)
     webhook_requests_handler.register(app, path=WEBHOOK_PATH)
@@ -78,8 +78,8 @@ def main(bot: Bot):
 
 
 if __name__ == '__main__':
-    stop_run_continuously = run_continuously()
     asyncio.run(async_main())
     main(bot)
+    stop_run_continuously = run_continuously()
     stop_run_continuously.set()
     
