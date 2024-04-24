@@ -1,7 +1,6 @@
 import asyncio
 import os
 import aiohttp
-import schedule
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
@@ -9,10 +8,10 @@ from aiohttp import web
 import logging
 
 from database.models import async_main
-from database.requests import update_tokens
+
 from handlers.basic import get_balance, register_user, random_cart, prediction, buy_token, add_email, bot_help
 from utils.commands import set_commands
-from utils.task_scheduler import run_continuously
+from utils.gpt import simple_gpt
 from utils.yookassa import check_payment
 
 # webhook settings
@@ -36,6 +35,13 @@ async def handle_post_request(request):
     else:
         await bot.send_message(chat_id=telegram_id, text=f'Что-то пошло не так')
     return aiohttp.web.Response(text="ok", status=200)
+
+
+async def post_gpt(request):
+    data = await request.json()
+    question = data['question']
+    answer = simple_gpt(question)
+    return aiohttp.web.Response(text=answer, status=200)
 
 
 async def start_bot(bot: Bot):
@@ -69,8 +75,10 @@ def main(bot: Bot):
     dp.message.register(prediction)
     dp.shutdown.register(stop_bot)
     app = web.Application()
-    schedule.every().day.at('21:00').do(asyncio.run, update_tokens())  #
+
     app.router.add_post('/payment', handle_post_request)  # роут для обработки платежей
+    app.router.add_post('/gpt', post_gpt)
+
     webhook_requests_handler = SimpleRequestHandler(dispatcher=dp, bot=bot, secret_token=WEBHOOK_SECRET)
     webhook_requests_handler.register(app, path=WEBHOOK_PATH)
     setup_application(app, dp, bot=bot)
@@ -78,8 +86,5 @@ def main(bot: Bot):
 
 
 if __name__ == '__main__':
-    stop_run_continuously = run_continuously()
     asyncio.run(async_main())
     main(bot)
-    stop_run_continuously.set()
-    
