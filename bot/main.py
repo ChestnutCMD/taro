@@ -79,7 +79,7 @@ def main(bot: Bot):
     app = web.Application()
     schedule.every().day.at('21:00').do(asyncio.create_task, update_tokens())  #
     app.router.add_post('/payment', handle_post_request)  # роут для обработки платежей
-    app.router.add_post('/gpt', post_gpt)
+    #app.router.add_post('/gpt', post_gpt)
     webhook_requests_handler = SimpleRequestHandler(dispatcher=dp, bot=bot, secret_token=WEBHOOK_SECRET)
     webhook_requests_handler.register(app, path=WEBHOOK_PATH)
     setup_application(app, dp, bot=bot)
