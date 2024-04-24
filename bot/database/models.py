@@ -7,7 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_
 from os import getenv
 
 engine = create_async_engine(
-    f"postgresql+asyncpg://{getenv('DB_USER')}:{getenv('DB_PASSWORD')}@{getenv('DB_HOST')}/{getenv('DB_NAME')}", poolclass=NullPool)
+    f"postgresql+asyncpg://{getenv('DB_USER')}:{getenv('DB_PASSWORD')}@{getenv('DB_HOST')}/{getenv('DB_NAME')}",
+    poolclass=NullPool)
 
 async_session = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
 
@@ -22,7 +23,8 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     telegram_id: Mapped[int] = mapped_column(BigInteger)
     name: Mapped[str] = mapped_column(String)
-    token: Mapped[int] = mapped_column(default=1)
+    token: Mapped[int] = mapped_column(default=3)
+    email: Mapped[str] = mapped_column(String, nullable=True)
 
 
 class Transaction(Base):
