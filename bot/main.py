@@ -71,7 +71,7 @@ def main(bot: Bot):
     schedule.every().day.at('21:00').do(asyncio.run, update_tokens())  #
     app.router.add_post('/payment', handle_post_request)  # роут для обработки платежей
     webhook_requests_handler = SimpleRequestHandler(dispatcher=dp, bot=bot)
-    webhook_requests_handler.register(app, path=WEBHOOK_PATH)
+    webhook_requests_handler.register(app, path=WEBHOOK_URL)
     setup_application(app, dp, bot=bot)
     web.run_app(app, host='0.0.0.0', port=7500)
 
