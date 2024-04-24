@@ -77,7 +77,6 @@ def main(bot: Bot):
     web.run_app(app, host='0.0.0.0', port=7500)
 
 
-
 if __name__ == '__main__':
     stop_run_continuously = run_continuously()
     asyncio.run(async_main())
