@@ -13,6 +13,10 @@ async def set_commands(bot: Bot):
             description='Карта дня'
         ),
         BotCommand(
+            command='help',
+            description='Помощь'
+        ),
+        BotCommand(
             command='balance',
             description='Проверить баланс'
         ),
