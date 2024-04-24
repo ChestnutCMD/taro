@@ -16,7 +16,7 @@ from utils.task_scheduler import run_continuously
 from utils.yookassa import check_payment
 
 # webhook settings
-WEBHOOK_PATH = f'/{os.getenv("BOT_TOKEN")}'
+WEBHOOK_PATH = f'/webhook/{os.getenv("BOT_TOKEN")}'
 WEBHOOK_URL = f'https://tarobot.space{WEBHOOK_PATH}'
 
 bot = Bot(os.getenv('BOT_TOKEN'))
@@ -71,7 +71,7 @@ def main(bot: Bot):
     schedule.every().day.at('21:00').do(asyncio.run, update_tokens())  #
     app.router.add_post('/payment', handle_post_request)  # роут для обработки платежей
     webhook_requests_handler = SimpleRequestHandler(dispatcher=dp, bot=bot)
-    webhook_requests_handler.register(app, path=WEBHOOK_URL)
+    webhook_requests_handler.register(app, path=WEBHOOK_PATH)
     setup_application(app, dp, bot=bot)
     web.run_app(app, host='0.0.0.0', port=7500)
 
