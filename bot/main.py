@@ -17,7 +17,7 @@ from utils.yookassa import check_payment
 
 # webhook settings
 WEBHOOK_PATH = f'/webhook/{os.getenv("BOT_TOKEN")}'
-WEBHOOK_URL = f'https://tarobot.space{WEBHOOK_PATH}'
+WEBHOOK_URL = f'https://saqartvel.store{WEBHOOK_PATH}'
 
 bot = Bot(os.getenv('BOT_TOKEN'))
 
